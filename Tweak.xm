@@ -4,6 +4,7 @@
 	NSMutableDictionary *infos;
 }
 @property (strong, nonatomic) UITableView *tableView;
+@property UIViewController *parentVC;
 +(NSArray *)packageInfoOrder;
 @end
 
@@ -60,7 +61,18 @@
 
 %new
 -(void)tappedOnViewReports{
-	
+	NSMutableDictionary *packageInfo = MSHookIvar<NSMutableDictionary *>(self, "infos");
+	NSString *versionString = [packageInfo objectForKey:@"Version"];
+	NSLog(@"ZEBRACOMPATIBLE orig: %@", versionString);
+	if ([versionString containsString:@"(Installed Version"]){
+		NSArray *versionArray = [versionString componentsSeparatedByString:@"(Installed Version"];
+		versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
+		NSLog(@"ZEBRACOMPATIBLE new: %@", versionString);
+	}
+	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [packageInfo objectForKey:@"packageID"], versionString]];
+	SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+	[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
+
 }
 
 %new
