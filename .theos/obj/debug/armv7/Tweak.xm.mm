@@ -52,6 +52,8 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$viewDidLoa
 
 
 
+
+
 static NSArray * _logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST __unused self, SEL __unused _cmd) {
 	NSArray *origPkgInfoOrder = _logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder(self, _cmd);
 	NSMutableArray *pkgInfoOrder = [NSMutableArray arrayWithArray:origPkgInfoOrder];
@@ -79,28 +81,89 @@ static UITableViewCell * _logos_method$_ungrouped$ZBPackageInfoView$tableView$ce
                 }
             }
 			if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Working"]){
-                        [[cell textLabel] setText:@"Works with your device"];
-                        [[cell textLabel] setTextColor:[UIColor colorWithRed:.224 green:.792 blue:.459 alpha:1.0]];
-                        [[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
-						return cell;
-                    } else if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Likely working"]) {
-                        [[cell textLabel] setText:@"Probably works with your device (not 100% sure!)"];
-                        [[cell textLabel] setTextColor:[UIColor colorWithRed:.941 green:.765 blue:.188 alpha:1.0]];
-                        [[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
-						return cell;
-                    } else if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Not working"]){
-                        [[cell textLabel] setText:@"Does not work with your device"];
-                        [[cell textLabel] setTextColor:[UIColor colorWithRed:.894 green:.302 blue:.259 alpha:1.0]];
-                        [[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
-						return cell;
-                    } else {
-						[[cell textLabel] setText:@"Unknown compatibility/No reports"];
-            			[[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
-						return cell;
-					}
+            	[[cell textLabel] setText:@"Works with your device"];
+                [[cell textLabel] setTextColor:[UIColor colorWithRed:.224 green:.792 blue:.459 alpha:1.0]];
+                [[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
+				UIButton *viewReportsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+	    		[viewReportsButton addTarget:self action:@selector(tappedOnViewReports) forControlEvents:UIControlEventTouchUpInside];
+				UIButton *addReportButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+				[addReportButton addTarget:self action:@selector(tappedOnAddReport) forControlEvents:UIControlEventTouchUpInside];
+		    	UIStackView *buttonsStackView = [[UIStackView alloc] initWithFrame:CGRectMake(0, 0, 65, 25)];
+				[buttonsStackView setAxis:UILayoutConstraintAxisHorizontal];
+		   	 	[buttonsStackView setDistribution:UIStackViewDistributionEqualSpacing];
+				[buttonsStackView setAlignment:UIStackViewAlignmentLeading];
+				[buttonsStackView setBackgroundColor:[UIColor yellowColor]];
+		    	[buttonsStackView addArrangedSubview:viewReportsButton];
+				[buttonsStackView addArrangedSubview:addReportButton];
+				[cell setAccessoryView:buttonsStackView];
+				return cell;
+            } else if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Likely working"]) {
+                [[cell textLabel] setText:@"**Probably** works with your device"];
+                [[cell textLabel] setTextColor:[UIColor colorWithRed:.941 green:.765 blue:.188 alpha:1.0]];
+                [[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
+				UIButton *viewReportsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+	    		[viewReportsButton addTarget:self action:@selector(tappedOnViewReports) forControlEvents:UIControlEventTouchUpInside];
+				UIButton *addReportButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+				[addReportButton addTarget:self action:@selector(tappedOnAddReport) forControlEvents:UIControlEventTouchUpInside];
+		    	UIStackView *buttonsStackView = [[UIStackView alloc] initWithFrame:CGRectMake(0, 0, 65, 25)];
+				[buttonsStackView setAxis:UILayoutConstraintAxisHorizontal];
+	    		[buttonsStackView setDistribution:UIStackViewDistributionEqualSpacing];
+	    		[buttonsStackView setAlignment:UIStackViewAlignmentLeading];
+				[buttonsStackView setBackgroundColor:[UIColor yellowColor]];
+	    		[buttonsStackView addArrangedSubview:viewReportsButton];
+				[buttonsStackView addArrangedSubview:addReportButton];
+				[cell setAccessoryView:buttonsStackView];
+				return cell;
+            } else if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Not working"]){
+                [[cell textLabel] setText:@"Does not work with your device"];
+                [[cell textLabel] setTextColor:[UIColor colorWithRed:.894 green:.302 blue:.259 alpha:1.0]];
+                [[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
+				UIButton *viewReportsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+		    	[viewReportsButton addTarget:self action:@selector(tappedOnViewReports) forControlEvents:UIControlEventTouchUpInside];
+				UIButton *addReportButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+				[addReportButton addTarget:self action:@selector(tappedOnAddReport) forControlEvents:UIControlEventTouchUpInside];
+	    		UIStackView *buttonsStackView = [[UIStackView alloc] initWithFrame:CGRectMake(0, 0, 65, 25)];
+				[buttonsStackView setAxis:UILayoutConstraintAxisHorizontal];
+		    	[buttonsStackView setDistribution:UIStackViewDistributionEqualSpacing];
+	    		[buttonsStackView setAlignment:UIStackViewAlignmentLeading];
+				[buttonsStackView setBackgroundColor:[UIColor yellowColor]];
+		    	[buttonsStackView addArrangedSubview:viewReportsButton];
+				[buttonsStackView addArrangedSubview:addReportButton];
+				[cell setAccessoryView:buttonsStackView];
+				return cell;
+            } else {
+				[[cell textLabel] setText:@"Unknown compatibility/No reports"];
+				[[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
+				UIButton *viewReportsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+	    		[viewReportsButton addTarget:self action:@selector(tappedOnViewReports) forControlEvents:UIControlEventTouchUpInside];
+				UIButton *addReportButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+				[addReportButton addTarget:self action:@selector(tappedOnAddReport) forControlEvents:UIControlEventTouchUpInside];
+	    		UIStackView *buttonsStackView = [[UIStackView alloc] initWithFrame:CGRectMake(0, 0, 65, 25)];
+				[buttonsStackView setAxis:UILayoutConstraintAxisHorizontal];
+		    	[buttonsStackView setDistribution:UIStackViewDistributionEqualSpacing];
+	   		 	[buttonsStackView setAlignment:UIStackViewAlignmentLeading];
+				[buttonsStackView setBackgroundColor:[UIColor yellowColor]];
+		    	[buttonsStackView addArrangedSubview:viewReportsButton];
+				[buttonsStackView addArrangedSubview:addReportButton];
+				[cell setAccessoryView:buttonsStackView];
+				return cell;
+			}
         } else {
             [[cell textLabel] setText:@"Unknown compatibility/No reports"];
             [[cell detailTextLabel] setText:@"Provided by TweakCompatible"];
+			UIButton *viewReportsButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+	    	[viewReportsButton addTarget:self action:@selector(tappedOnViewReports) forControlEvents:UIControlEventTouchUpInside];
+			UIButton *addReportButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+			[addReportButton addTarget:self action:@selector(tappedOnAddReport) forControlEvents:UIControlEventTouchUpInside];
+	    	UIStackView *buttonsStackView = [[UIStackView alloc] initWithFrame:CGRectMake(0, 0, 65, 25)];
+			[buttonsStackView setAxis:UILayoutConstraintAxisHorizontal];
+	    	[buttonsStackView setDistribution:UIStackViewDistributionEqualSpacing];
+	    	[buttonsStackView setAlignment:UIStackViewAlignmentLeading];
+			[buttonsStackView setBackgroundColor:[UIColor yellowColor]];
+	    	[buttonsStackView addArrangedSubview:viewReportsButton];
+			[buttonsStackView addArrangedSubview:addReportButton];
+	
+			[cell setAccessoryView:buttonsStackView];
 			return cell;
         }
     } else {
@@ -118,15 +181,45 @@ static void _logos_method$_ungrouped$ZBPackageInfoView$setPackage$(_LOGOS_SELF_T
 
 
 static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd){
-	NSMutableDictionary *packageInfo = MSHookIvar<NSMutableDictionary *>(self, "infos");
-	NSString *versionString = [packageInfo objectForKey:@"Version"];
+	NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
+    NSString *packageID = [infoDict objectForKey:@"packageID"];
+	NSString *versionString = [infoDict objectForKey:@"Version"];
+	NSString *summary = [[NSString alloc] init];
 	if ([versionString containsString:@"(Installed Version"]){
 		NSArray *versionArray = [versionString componentsSeparatedByString:@"(Installed Version"];
 		versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
 	}
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [packageInfo objectForKey:@"packageID"], versionString]];
-	SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
-	[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
+    if ([[all_packages allKeys] containsObject:packageID] ) {
+        NSDictionary *compatibilityInfo = [NSJSONSerialization JSONObjectWithData:[all_packages objectForKey:packageID] options:0 error:NULL];
+        NSArray *allVersions = [compatibilityInfo objectForKey:@"versions"];
+		NSDictionary *outcomeDict;
+        for (NSDictionary *versionInfo in allVersions){
+            if ([[versionInfo objectForKey:@"tweakVersion"] isEqualToString:[compatibilityInfo objectForKey:@"latest"]]) {
+                if (sizeof(void*) == 4) {
+                    outcomeDict = [NSDictionary dictionaryWithDictionary:[[versionInfo objectForKey:@"outcome"] objectForKey:@"arch32"]];
+                } else  {
+                    outcomeDict = [NSDictionary dictionaryWithDictionary:[versionInfo objectForKey:@"outcome"]];
+                }
+            }
+        }
+		if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Working"] || [[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Likely working"] || [[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Not working"]){
+            summary = [NSString stringWithFormat:@"%@ version %@ is marked as %@ on iOS %@\n\n(%@ reports, %@ working and %@ non-working)", [infoDict objectForKey:@"packageID"], versionString, [outcomeDict objectForKey:@"calculatedStatus"], [[UIDevice currentDevice] systemVersion], [outcomeDict objectForKey:@"total"], [outcomeDict objectForKey:@"good"], [outcomeDict objectForKey:@"bad"]];
+        } else {
+			summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@"packageID"], versionString, [[UIDevice currentDevice] systemVersion]];
+		}
+    } else {
+		summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@"packageID"], versionString, [[UIDevice currentDevice] systemVersion]];
+    }
+	UIAlertController *compatibilityAlert = [UIAlertController alertControllerWithTitle:@"Compatibility Report" message:summary preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *viewAllReportsAction = [UIAlertAction actionWithTitle:@"View all reports" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [infoDict objectForKey:@"packageID"], versionString]];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
+    }];
+    [compatibilityAlert addAction:viewAllReportsAction];
+    [compatibilityAlert addAction:dismissAction];
+    [[self parentVC] presentViewController:compatibilityAlert animated:TRUE completion:nil];
 }
 
 
@@ -137,4 +230,4 @@ static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_
 
 static __attribute__((constructor)) void _logosLocalInit() {
 {Class _logos_class$_ungrouped$ZBPackageDepictionViewController = objc_getClass("ZBPackageDepictionViewController"); MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$viewDidLoad);Class _logos_class$_ungrouped$ZBPackageInfoView = objc_getClass("ZBPackageInfoView"); Class _logos_metaclass$_ungrouped$ZBPackageInfoView = object_getClass(_logos_class$_ungrouped$ZBPackageInfoView); MSHookMessageEx(_logos_metaclass$_ungrouped$ZBPackageInfoView, @selector(packageInfoOrder), (IMP)&_logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder, (IMP*)&_logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tableView:cellForRowAtIndexPath:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(setPackage:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$setPackage$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$setPackage$);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnViewReports), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnAddReport), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport, _typeEncoding); }} }
-#line 112 "Tweak.xm"
+#line 205 "Tweak.xm"
