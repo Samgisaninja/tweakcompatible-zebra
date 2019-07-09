@@ -1,0 +1,9 @@
+Package: com.samgisaninja.tweakcompatible-zebra
+Name: tweakcompatible-zebra
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Adds TweakCompatible to Zebra!
+Maintainer: Samg_is_a_Ninja
+Author: Samg_is_a_Ninja
+Section: Tweaks
