@@ -279,13 +279,17 @@ NSMutableDictionary *all_packages;
 	[userInfo setObject:myVersion forKey:@"tweakCompatVersion"];
 	[userInfo setObject:@(packageExists) forKey:@"packageIndexed"];
 	[userInfo setObject:@(versionExists) forKey:@"packageVersionIndexed"];
-	[userInfo setObject:[outcomeDict objectForKey:@"calculatedStatus"] forKey:@"packageStatus"];
+	if ([packageStatusExplanation containsString:@"package version has been marked as"]) {
+		[userInfo setObject:[outcomeDict objectForKey:@"calculatedStatus"] forKey:@"packageStatus"];
+	} else {
+		[userInfo setObject:@"Unknown" forKey:@"packageStatus"];
+	}
 	[userInfo setObject:packageStatusExplanation forKey:@"packageStatusExplaination"];
 	[userInfo setObject:[infoDict objectForKey:@"packageID"] forKey:@"packageId"];
 	[userInfo setObject:[infoDict objectForKey:@"packageID"] forKey:@"id"];
 	[userInfo setObject:[[self packageName] text] forKey:@"name"];
 	[userInfo setObject:[[self packageName] text] forKey:@"packageName"];
-	[userInfo setObject:versionString forKey:@"packageVersion"];
+	[userInfo setObject:versionString forKey:@"latest"];
 	[userInfo setObject:installedVersionString forKey:@"installed"];
 	BOOL isPaidPkg = [[self depictionPackage] isPaid];
 	[userInfo setObject:@(isPaidPkg) forKey:@"commercial"];
@@ -301,7 +305,7 @@ NSMutableDictionary *all_packages;
 	[userInfo setObject:@(isArmv7) forKey:@"arch32"];
 	[userInfo setObject:[infoDict objectForKey:@"Repo"] forKey:@"repository"];
 	[userInfo setObject:[infoDict objectForKey:@"Author"] forKey:@"author"];
-	[userInfo setObject:[NSString stringWithFormat:@"https://cydia.saurik.com/package/%@", [infoDict objectForKey:@"packageID"]] forKey:@"url"];
+	[userInfo setObject:[NSString stringWithFormat:@"http://cydia.saurik.com/package/%@/", [infoDict objectForKey:@"packageID"]] forKey:@"url"];
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo options:kNilOptions error:nil];
 	NSString *userInfoBase64 = [jsonData base64EncodedStringWithOptions:0];
 	NSString *workingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/working/%@", [infoDict objectForKey:@"packageID"], userInfoBase64];
@@ -309,9 +313,9 @@ NSMutableDictionary *all_packages;
 	UIAlertController *markPackageAlert;
 	NSString *message = [[NSString alloc] init];
 	if (isInstalled) {
-		message = [NSString stringWithFormat:@"Log in to Github in TweakCompatibile for Zebra's settings BEFORE attempting to add a report"];
+		message = [NSString stringWithFormat:@"Log in to Github in safari BEFORE attempting to add a report"];
 	} else {
-		message = [NSString stringWithFormat:@"Log in to Github in TweakCompatibile for Zebra's settings BEFORE attempting to add a report\nYou cannot file a 'working' report unless you have the package installed"];
+		message = [NSString stringWithFormat:@"Log in to Github in safari BEFORE attempting to add a report\nYou cannot file a 'working' report unless you have the package installed"];
 	}
     if ([[[UIDevice currentDevice] model] isEqualToString:@"iPad"]) {
         markPackageAlert = [UIAlertController alertControllerWithTitle:@"Create report" message:message preferredStyle:UIAlertControllerStyleAlert];

@@ -47,7 +47,7 @@ NSMutableDictionary *all_packages;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class ZBPackageDepictionViewController; @class ZBPackageInfoView; 
+@class ZBPackageInfoView; @class ZBPackageDepictionViewController; 
 static void (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static NSArray * (*_logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static NSArray * _logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static UITableViewCell * (*_logos_orig$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static UITableViewCell * _logos_method$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static void (*_logos_orig$_ungrouped$ZBPackageInfoView$setPackage$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, ZBPackage *); static void _logos_method$_ungrouped$ZBPackageInfoView$setPackage$(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, ZBPackage *); static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL); 
 
 #line 28 "Tweak.xm"
@@ -305,13 +305,17 @@ static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_
 	[userInfo setObject:myVersion forKey:@"tweakCompatVersion"];
 	[userInfo setObject:@(packageExists) forKey:@"packageIndexed"];
 	[userInfo setObject:@(versionExists) forKey:@"packageVersionIndexed"];
-	[userInfo setObject:[outcomeDict objectForKey:@"calculatedStatus"] forKey:@"packageStatus"];
+	if ([packageStatusExplanation containsString:@"package version has been marked as"]) {
+		[userInfo setObject:[outcomeDict objectForKey:@"calculatedStatus"] forKey:@"packageStatus"];
+	} else {
+		[userInfo setObject:@"Unknown" forKey:@"packageStatus"];
+	}
 	[userInfo setObject:packageStatusExplanation forKey:@"packageStatusExplaination"];
 	[userInfo setObject:[infoDict objectForKey:@"packageID"] forKey:@"packageId"];
 	[userInfo setObject:[infoDict objectForKey:@"packageID"] forKey:@"id"];
 	[userInfo setObject:[[self packageName] text] forKey:@"name"];
 	[userInfo setObject:[[self packageName] text] forKey:@"packageName"];
-	[userInfo setObject:versionString forKey:@"packageVersion"];
+	[userInfo setObject:versionString forKey:@"latest"];
 	[userInfo setObject:installedVersionString forKey:@"installed"];
 	BOOL isPaidPkg = [[self depictionPackage] isPaid];
 	[userInfo setObject:@(isPaidPkg) forKey:@"commercial"];
@@ -327,7 +331,7 @@ static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_
 	[userInfo setObject:@(isArmv7) forKey:@"arch32"];
 	[userInfo setObject:[infoDict objectForKey:@"Repo"] forKey:@"repository"];
 	[userInfo setObject:[infoDict objectForKey:@"Author"] forKey:@"author"];
-	[userInfo setObject:[NSString stringWithFormat:@"https://cydia.saurik.com/package/%@", [infoDict objectForKey:@"packageID"]] forKey:@"url"];
+	[userInfo setObject:[NSString stringWithFormat:@"http://cydia.saurik.com/package/%@/", [infoDict objectForKey:@"packageID"]] forKey:@"url"];
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo options:kNilOptions error:nil];
 	NSString *userInfoBase64 = [jsonData base64EncodedStringWithOptions:0];
 	NSString *workingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/working/%@", [infoDict objectForKey:@"packageID"], userInfoBase64];
@@ -335,9 +339,9 @@ static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_
 	UIAlertController *markPackageAlert;
 	NSString *message = [[NSString alloc] init];
 	if (isInstalled) {
-		message = [NSString stringWithFormat:@"Log in to Github in TweakCompatibile for Zebra's settings BEFORE attempting to add a report"];
+		message = [NSString stringWithFormat:@"Log in to Github in safari BEFORE attempting to add a report"];
 	} else {
-		message = [NSString stringWithFormat:@"Log in to Github in TweakCompatibile for Zebra's settings BEFORE attempting to add a report\nYou cannot file a 'working' report unless you have the package installed"];
+		message = [NSString stringWithFormat:@"Log in to Github in safari BEFORE attempting to add a report\nYou cannot file a 'working' report unless you have the package installed"];
 	}
     if ([[[UIDevice currentDevice] model] isEqualToString:@"iPad"]) {
         markPackageAlert = [UIAlertController alertControllerWithTitle:@"Create report" message:message preferredStyle:UIAlertControllerStyleAlert];
@@ -362,4 +366,4 @@ static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_
 
 static __attribute__((constructor)) void _logosLocalInit() {
 {Class _logos_class$_ungrouped$ZBPackageDepictionViewController = objc_getClass("ZBPackageDepictionViewController"); MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$viewDidLoad);Class _logos_class$_ungrouped$ZBPackageInfoView = objc_getClass("ZBPackageInfoView"); Class _logos_metaclass$_ungrouped$ZBPackageInfoView = object_getClass(_logos_class$_ungrouped$ZBPackageInfoView); MSHookMessageEx(_logos_metaclass$_ungrouped$ZBPackageInfoView, @selector(packageInfoOrder), (IMP)&_logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder, (IMP*)&_logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tableView:cellForRowAtIndexPath:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(setPackage:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$setPackage$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$setPackage$);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnViewReports), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnAddReport), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport, _typeEncoding); }} }
-#line 337 "Tweak.xm"
+#line 341 "Tweak.xm"
