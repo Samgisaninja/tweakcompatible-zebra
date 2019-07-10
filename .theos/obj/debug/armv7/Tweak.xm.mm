@@ -47,19 +47,39 @@ NSMutableDictionary *all_packages;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class ZBPackageDepictionViewController; @class ZBPackageInfoView; 
-static void (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static NSArray * (*_logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static NSArray * _logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static UITableViewCell * (*_logos_orig$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static UITableViewCell * _logos_method$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static void (*_logos_orig$_ungrouped$ZBPackageInfoView$setPackage$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, ZBPackage *); static void _logos_method$_ungrouped$ZBPackageInfoView$setPackage$(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, ZBPackage *); static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL); 
+@class ZBTabBarController; @class ZBPackageInfoView; 
+static void (*_logos_orig$_ungrouped$ZBTabBarController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBTabBarController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST, SEL); static NSArray * (*_logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder)(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static NSArray * _logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder(_LOGOS_SELF_TYPE_NORMAL Class _LOGOS_SELF_CONST, SEL); static UITableViewCell * (*_logos_orig$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static UITableViewCell * _logos_method$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static void (*_logos_orig$_ungrouped$ZBPackageInfoView$setPackage$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, ZBPackage *); static void _logos_method$_ungrouped$ZBPackageInfoView$setPackage$(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL, ZBPackage *); static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_SELF_TYPE_NORMAL ZBPackageInfoView* _LOGOS_SELF_CONST, SEL); 
 
 #line 28 "Tweak.xm"
 
 
-static void _logos_method$_ungrouped$ZBPackageDepictionViewController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd){
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-   	NSString *basePath = [paths.firstObject stringByAppendingPathComponent:@"TweakCompatible.plist"];
-	all_packages = [NSMutableDictionary dictionaryWithDictionary:[NSDictionary dictionaryWithContentsOfFile:basePath]];
-	_logos_orig$_ungrouped$ZBPackageDepictionViewController$viewDidLoad(self, _cmd);
+static void _logos_method$_ungrouped$ZBTabBarController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd){
+    if (!all_packages){
+        all_packages = [[NSMutableDictionary alloc] init];
+        NSURL *url =  [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/json/iOS/%@.json", [[UIDevice currentDevice] systemVersion]]];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse* response, NSData* data, NSError* error) {
+            if (data) {
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                
+                if (!all_packages) {
+                    all_packages = [[NSMutableDictionary alloc] init];
+                }
+                for (id package in json[@"packages"]) {
+                    NSString *packageId = [NSString stringWithFormat:@"%@", [package objectForKey:@"id"]];
+                    NSData *packageData = [NSJSONSerialization dataWithJSONObject:package options:kNilOptions error:nil];
+                    
+                    if ( ![[all_packages allKeys] containsObject:packageId] ) {
+                        [all_packages setObject:packageData forKey:packageId];
+                    }
+                }
+                [[NSFileManager defaultManager] createDirectoryAtPath:@"/Library/Application Support/tweakcompatible-zebra/" withIntermediateDirectories:TRUE attributes:nil error:nil];
+                [all_packages writeToFile:@"/Library/Application Support/tweakcompatible-zebra/packages.plist" atomically:TRUE];
+            }
+        }];
+    }
+    _logos_orig$_ungrouped$ZBTabBarController$viewDidLoad(self, _cmd);
 }
-
 
 
 
@@ -367,5 +387,5 @@ static void _logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport(_LOGOS_
 
 
 static __attribute__((constructor)) void _logosLocalInit() {
-{Class _logos_class$_ungrouped$ZBPackageDepictionViewController = objc_getClass("ZBPackageDepictionViewController"); MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$viewDidLoad);Class _logos_class$_ungrouped$ZBPackageInfoView = objc_getClass("ZBPackageInfoView"); Class _logos_metaclass$_ungrouped$ZBPackageInfoView = object_getClass(_logos_class$_ungrouped$ZBPackageInfoView); MSHookMessageEx(_logos_metaclass$_ungrouped$ZBPackageInfoView, @selector(packageInfoOrder), (IMP)&_logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder, (IMP*)&_logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tableView:cellForRowAtIndexPath:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(setPackage:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$setPackage$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$setPackage$);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnViewReports), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnAddReport), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport, _typeEncoding); }} }
-#line 343 "Tweak.xm"
+{Class _logos_class$_ungrouped$ZBTabBarController = objc_getClass("ZBTabBarController"); MSHookMessageEx(_logos_class$_ungrouped$ZBTabBarController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$ZBTabBarController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$ZBTabBarController$viewDidLoad);Class _logos_class$_ungrouped$ZBPackageInfoView = objc_getClass("ZBPackageInfoView"); Class _logos_metaclass$_ungrouped$ZBPackageInfoView = object_getClass(_logos_class$_ungrouped$ZBPackageInfoView); MSHookMessageEx(_logos_metaclass$_ungrouped$ZBPackageInfoView, @selector(packageInfoOrder), (IMP)&_logos_meta_method$_ungrouped$ZBPackageInfoView$packageInfoOrder, (IMP*)&_logos_meta_orig$_ungrouped$ZBPackageInfoView$packageInfoOrder);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tableView:cellForRowAtIndexPath:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$tableView$cellForRowAtIndexPath$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageInfoView, @selector(setPackage:), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$setPackage$, (IMP*)&_logos_orig$_ungrouped$ZBPackageInfoView$setPackage$);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnViewReports), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnViewReports, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageInfoView, @selector(tappedOnAddReport), (IMP)&_logos_method$_ungrouped$ZBPackageInfoView$tappedOnAddReport, _typeEncoding); }} }
+#line 363 "Tweak.xm"

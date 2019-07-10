@@ -25,17 +25,37 @@ NSMutableDictionary *all_packages;
 +(NSArray *)packageInfoOrder;
 @end
 
-%hook ZBPackageDepictionViewController
+%hook ZBTabBarController
 
 -(void)viewDidLoad{
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-   	NSString *basePath = [paths.firstObject stringByAppendingPathComponent:@"TweakCompatible.plist"];
-	all_packages = [NSMutableDictionary dictionaryWithDictionary:[NSDictionary dictionaryWithContentsOfFile:basePath]];
-	%orig;
+    if (!all_packages){
+        all_packages = [[NSMutableDictionary alloc] init];
+        NSURL *url =  [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/json/iOS/%@.json", [[UIDevice currentDevice] systemVersion]]];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:url];
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse* response, NSData* data, NSError* error) {
+            if (data) {
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                
+                if (!all_packages) {
+                    all_packages = [[NSMutableDictionary alloc] init];
+                }
+                for (id package in json[@"packages"]) {
+                    NSString *packageId = [NSString stringWithFormat:@"%@", [package objectForKey:@"id"]];
+                    NSData *packageData = [NSJSONSerialization dataWithJSONObject:package options:kNilOptions error:nil];
+                    
+                    if ( ![[all_packages allKeys] containsObject:packageId] ) {
+                        [all_packages setObject:packageData forKey:packageId];
+                    }
+                }
+                [[NSFileManager defaultManager] createDirectoryAtPath:@"/Library/Application Support/tweakcompatible-zebra/" withIntermediateDirectories:TRUE attributes:nil error:nil];
+                [all_packages writeToFile:@"/Library/Application Support/tweakcompatible-zebra/packages.plist" atomically:TRUE];
+            }
+        }];
+    }
+    %orig;
 }
 
 %end
-
 
 
 %hook ZBPackageInfoView
