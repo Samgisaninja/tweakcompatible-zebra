@@ -331,7 +331,9 @@ NSMutableDictionary *all_packages;
 		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
-    [markPackageAlert addAction:markAsWorkingAction];
+    if (isInstalled){
+		[markPackageAlert addAction:markAsWorkingAction];
+	}
     [markPackageAlert addAction:markAsNotWorkingAction];
     [markPackageAlert addAction:cancelAction];
     [[self parentVC] presentViewController:markPackageAlert animated:TRUE completion:nil];
