@@ -723,7 +723,7 @@ NSMutableDictionary *all_packages;
     NSString *dpkgStatus = [NSString stringWithContentsOfFile:@"/Library/dpkg/status" encoding:NSUTF8StringEncoding error:nil];
     NSArray *dpkgStatusArray = [dpkgStatus componentsSeparatedByString:@"Package: "];
     for (NSString *dpkgPackageStatus in dpkgStatusArray) {
-        if ([dpkgPackageStatus hasPrefix:[[NSBundle mainBundle] bundleIdentifier]]) {
+        if ([dpkgPackageStatus hasPrefix:@"xyz.willy.zebra"]) {
             NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
             for (NSString *line in statusLines) {
                 if ([line hasPrefix:@"Version: "]) {
