@@ -7,5 +7,6 @@ Maintainer: Samg_is_a_Ninja
 Author: Samg_is_a_Ninja
 Section: Tweaks
 Depiction: https://samgisaninja.github.io/depictions/?p=com.samgisaninja.tweakcompatible-zebra
-Version: 1.0-6+debug
-Installed-Size: 256
+Icon: file:///Library/tweakcompatible-zebra/icon.png
+Version: 1.1-1+debug
+Installed-Size: 404
