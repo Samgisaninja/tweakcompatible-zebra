@@ -15,14 +15,13 @@ NSMutableDictionary *all_packages;
 - (BOOL)isPaid;
 @end
 
-@interface ZBPackageInfoView : UIView {
+@interface ZBPackageDepictionViewController : UIViewController {
 	NSMutableDictionary *infos;
 }
-@property ZBPackage *depictionPackage;
+@property ZBPackage *package;
 @property (strong, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UILabel *packageName;
-@property UIViewController *parentVC;
-+(NSArray *)packageInfoOrder;
+- (NSArray *)packageInfoOrder;
 @end
 
 %hook ZBTabBarController
@@ -58,9 +57,9 @@ NSMutableDictionary *all_packages;
 %end
 
 
-%hook ZBPackageInfoView
+%hook ZBPackageDepictionViewController
 
-+(NSArray *)packageInfoOrder {
+- (NSArray *)packageInfoOrder {
 	NSArray *origPkgInfoOrder = %orig;
 	NSMutableArray *pkgInfoOrder = [NSMutableArray arrayWithArray:origPkgInfoOrder];
 	int i = (int)[pkgInfoOrder count];
@@ -69,7 +68,7 @@ NSMutableDictionary *all_packages;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
-    if ([arg2 row] == [[[self class] packageInfoOrder] indexOfObject:@"TweakCompatible"]) {
+    if ([arg2 row] == [[self packageInfoOrder] indexOfObject:@"TweakCompatible"]) {
         UITableViewCell *cell = %orig;
         NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
         NSString *packageID = [infoDict objectForKey:@"packageID"];
@@ -177,7 +176,7 @@ NSMutableDictionary *all_packages;
 	}
 }
 
--(void)setPackage:(ZBPackage *)arg1{
+-(void)setPackage{
 	%orig;
 	NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
 	[infoDict setObject:@"TweakCompatible" forKey:@"TweakCompatible"];
@@ -221,11 +220,11 @@ NSMutableDictionary *all_packages;
     UIAlertAction *viewAllReportsAction = [UIAlertAction actionWithTitle:@"View all reports" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [infoDict objectForKey:@"packageID"], versionString]];
 		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
-		[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
+		[self presentViewController:safariVC animated:TRUE completion:nil];
     }];
     [compatibilityAlert addAction:viewAllReportsAction];
     [compatibilityAlert addAction:dismissAction];
-    [[self parentVC] presentViewController:compatibilityAlert animated:TRUE completion:nil];
+    [self presentViewController:compatibilityAlert animated:TRUE completion:nil];
 }
 
 %new
@@ -311,10 +310,10 @@ NSMutableDictionary *all_packages;
 	[userInfo setObject:[[self packageName] text] forKey:@"packageName"];
 	[userInfo setObject:versionString forKey:@"latest"];
 	[userInfo setObject:installedVersionString forKey:@"installed"];
-	BOOL isPaidPkg = [[self depictionPackage] isPaid];
+	BOOL isPaidPkg = [[self package] isPaid];
 	[userInfo setObject:@(isPaidPkg) forKey:@"commercial"];
-	[userInfo setObject:[[self depictionPackage] section] forKey:@"category"];
-	[userInfo setObject:[[self depictionPackage] shortDescription] forKey:@"shortDescription"];
+	[userInfo setObject:[[self package] section] forKey:@"category"];
+	[userInfo setObject:[[self package] shortDescription] forKey:@"shortDescription"];
 	[userInfo setObject:@(isInstalled) forKey:@"packageInstalled"];
 	BOOL isArmv7;
 	if ([archDescription isEqualToString:@"32bit"]){
@@ -356,7 +355,7 @@ NSMutableDictionary *all_packages;
 	}
     [markPackageAlert addAction:markAsNotWorkingAction];
     [markPackageAlert addAction:cancelAction];
-    [[self parentVC] presentViewController:markPackageAlert animated:TRUE completion:nil];
+    [self presentViewController:markPackageAlert animated:TRUE completion:nil];
 }
 
 %end
