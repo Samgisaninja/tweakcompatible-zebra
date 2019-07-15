@@ -249,17 +249,10 @@ NSMutableDictionary *all_packages;
 	NSDictionary *outcomeDict;
 	BOOL packageExists;
 	BOOL versionExists;
-	BOOL isInstalled;
 	NSString *versionString = [infoDict objectForKey:@"Version"];
-	NSString *installedVersionString = [[NSString alloc] init];
 	if ([versionString containsString:@" (Installed Version: "]){
-		isInstalled = TRUE;
 		NSArray *versionArray = [versionString componentsSeparatedByString:@" (Installed Version: "];
 		versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
-		installedVersionString = [[versionArray objectAtIndex:1] stringByReplacingOccurrencesOfString:@")" withString:@""];
-	} else {
-		isInstalled = FALSE;
-		installedVersionString = versionString;
 	}
     if ([[all_packages allKeys] containsObject:packageID] ) {
         NSDictionary *compatibilityInfo = [NSJSONSerialization JSONObjectWithData:[all_packages objectForKey:packageID] options:0 error:NULL];
@@ -308,6 +301,23 @@ NSMutableDictionary *all_packages;
             }
         }
     }
+	BOOL isInstalled;
+	NSString *installedVersionString = [[NSString alloc] init];
+	if ([dpkgStatus containsString:[infoDict objectForKey:@"packageID"]]){
+		isInstalled = TRUE;
+		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
+        	if ([dpkgPackageStatus containsString:[infoDict objectForKey:@"packageID"]]) {
+            	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
+            	for (NSString *line in statusLines) {
+                	if ([line hasPrefix:@"Version: "]) {
+                	    installedVersionString = [NSString stringWithFormat:@"tweakcompatible-zebra-%@", [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""]];
+                	}
+            	}
+        	}
+    	}
+	} else {
+		isInstalled = FALSE;
+	}
 	[userInfo setObject:myVersion forKey:@"tweakCompatVersion"];
 	[userInfo setObject:@(packageExists) forKey:@"packageIndexed"];
 	[userInfo setObject:@(versionExists) forKey:@"packageVersionIndexed"];
@@ -593,17 +603,10 @@ NSMutableDictionary *all_packages;
 	NSDictionary *outcomeDict;
 	BOOL packageExists;
 	BOOL versionExists;
-	BOOL isInstalled;
 	NSString *versionString = [infoDict objectForKey:@"Version"];
-	NSString *installedVersionString = [[NSString alloc] init];
 	if ([versionString containsString:@" (Installed Version: "]){
-		isInstalled = TRUE;
 		NSArray *versionArray = [versionString componentsSeparatedByString:@" (Installed Version: "];
 		versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
-		installedVersionString = [[versionArray objectAtIndex:1] stringByReplacingOccurrencesOfString:@")" withString:@""];
-	} else {
-		isInstalled = FALSE;
-		installedVersionString = versionString;
 	}
     if ([[all_packages allKeys] containsObject:packageID] ) {
         NSDictionary *compatibilityInfo = [NSJSONSerialization JSONObjectWithData:[all_packages objectForKey:packageID] options:0 error:NULL];
@@ -652,6 +655,23 @@ NSMutableDictionary *all_packages;
             }
         }
     }
+	BOOL isInstalled;
+	NSString *installedVersionString = [[NSString alloc] init];
+	if ([dpkgStatus containsString:[infoDict objectForKey:@"packageID"]]){
+		isInstalled = TRUE;
+		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
+        	if ([dpkgPackageStatus containsString:[infoDict objectForKey:@"packageID"]]) {
+            	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
+            	for (NSString *line in statusLines) {
+                	if ([line hasPrefix:@"Version: "]) {
+                	    installedVersionString = [NSString stringWithFormat:@"tweakcompatible-zebra-%@", [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""]];
+                	}
+            	}
+        	}
+    	}
+	} else {
+		isInstalled = FALSE;
+	}
 	[userInfo setObject:myVersion forKey:@"tweakCompatVersion"];
 	[userInfo setObject:@(packageExists) forKey:@"packageIndexed"];
 	[userInfo setObject:@(versionExists) forKey:@"packageVersionIndexed"];
