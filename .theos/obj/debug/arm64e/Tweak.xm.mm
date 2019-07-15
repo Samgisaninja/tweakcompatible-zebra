@@ -382,11 +382,13 @@ static void _logos_method$new$ZBPackageDepictionViewController$tappedOnAddReport
     }
     UIAlertAction *markAsWorkingAction = [UIAlertAction actionWithTitle:@"Package is working" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:workingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[self presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *markAsNotWorkingAction = [UIAlertAction actionWithTitle:@"Package is not working" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:notWorkingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[self presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     if (isInstalled){
@@ -724,11 +726,13 @@ static void _logos_method$old$ZBPackageInfoView$tappedOnAddReport(_LOGOS_SELF_TY
     }
     UIAlertAction *markAsWorkingAction = [UIAlertAction actionWithTitle:@"Package is working" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:workingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *markAsNotWorkingAction = [UIAlertAction actionWithTitle:@"Package is not working" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:notWorkingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     if (isInstalled){
@@ -743,7 +747,7 @@ static void _logos_method$old$ZBPackageInfoView$tappedOnAddReport(_LOGOS_SELF_TY
 
 
 
-static __attribute__((constructor)) void _logosLocalCtor_75d1df97(int __unused argc, char __unused **argv, char __unused **envp) {
+static __attribute__((constructor)) void _logosLocalCtor_1663c58b(int __unused argc, char __unused **argv, char __unused **envp) {
 	BOOL useOldMethods;
 	NSString *zebraVersion = [[NSString alloc] init];
     NSString *dpkgStatus = [NSString stringWithContentsOfFile:@"/Library/dpkg/status" encoding:NSUTF8StringEncoding error:nil];

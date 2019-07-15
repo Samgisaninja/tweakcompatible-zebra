@@ -356,11 +356,13 @@ NSMutableDictionary *all_packages;
     }
     UIAlertAction *markAsWorkingAction = [UIAlertAction actionWithTitle:@"Package is working" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:workingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[self presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *markAsNotWorkingAction = [UIAlertAction actionWithTitle:@"Package is not working" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:notWorkingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[self presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     if (isInstalled){
@@ -698,11 +700,13 @@ NSMutableDictionary *all_packages;
     }
     UIAlertAction *markAsWorkingAction = [UIAlertAction actionWithTitle:@"Package is working" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:workingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *markAsNotWorkingAction = [UIAlertAction actionWithTitle:@"Package is not working" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
         NSURL *url = [NSURL URLWithString:notWorkingURLString];
-		[[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
+		[[self parentVC] presentViewController:safariVC animated:TRUE completion:nil];
     }];
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
     if (isInstalled){
