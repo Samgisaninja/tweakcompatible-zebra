@@ -57,7 +57,7 @@ NSMutableDictionary *all_packages;
 #define _LOGOS_RETURN_RETAINED
 #endif
 
-@class ZBPackageDepictionViewController; @class ZBTabBarController; @class ZBPackageInfoView; 
+@class ZBPackageDepictionViewController; @class ZBPackageInfoView; @class ZBTabBarController; 
 
 
 #line 38 "Tweak.xm"
@@ -332,11 +332,12 @@ static void _logos_method$new$ZBPackageDepictionViewController$tappedOnAddReport
 	if ([dpkgStatus containsString:[infoDict objectForKey:@"packageID"]]){
 		isInstalled = TRUE;
 		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
-        	if ([dpkgPackageStatus containsString:[infoDict objectForKey:@"packageID"]]) {
+        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@"packageID"]]) {
             	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
+				NSLog(@"ZEBRACOMPAT: %@", dpkgPackageStatus);
             	for (NSString *line in statusLines) {
                 	if ([line hasPrefix:@"Version: "]) {
-                	    installedVersionString = [NSString stringWithFormat:@"tweakcompatible-zebra-%@", [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""]];
+                	    installedVersionString = [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""];
                 	}
             	}
         	}
@@ -686,11 +687,11 @@ static void _logos_method$old$ZBPackageInfoView$tappedOnAddReport(_LOGOS_SELF_TY
 	if ([dpkgStatus containsString:[infoDict objectForKey:@"packageID"]]){
 		isInstalled = TRUE;
 		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
-        	if ([dpkgPackageStatus containsString:[infoDict objectForKey:@"packageID"]]) {
+        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@"packageID"]]) {
             	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
             	for (NSString *line in statusLines) {
                 	if ([line hasPrefix:@"Version: "]) {
-                	    installedVersionString = [NSString stringWithFormat:@"tweakcompatible-zebra-%@", [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""]];
+                	    installedVersionString = [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""];
                 	}
             	}
         	}
@@ -767,7 +768,7 @@ static void _logos_method$old$ZBPackageInfoView$tappedOnAddReport(_LOGOS_SELF_TY
 
 
 
-static __attribute__((constructor)) void _logosLocalCtor_b2107b13(int __unused argc, char __unused **argv, char __unused **envp) {
+static __attribute__((constructor)) void _logosLocalCtor_e23ab9d9(int __unused argc, char __unused **argv, char __unused **envp) {
 	BOOL useOldMethods;
 	NSString *zebraVersion = [[NSString alloc] init];
     NSString *dpkgStatus = [NSString stringWithContentsOfFile:@"/Library/dpkg/status" encoding:NSUTF8StringEncoding error:nil];

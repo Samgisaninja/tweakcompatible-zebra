@@ -306,11 +306,11 @@ NSMutableDictionary *all_packages;
 	if ([dpkgStatus containsString:[infoDict objectForKey:@"packageID"]]){
 		isInstalled = TRUE;
 		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
-        	if ([dpkgPackageStatus containsString:[infoDict objectForKey:@"packageID"]]) {
+        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@"packageID"]]) {
             	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
             	for (NSString *line in statusLines) {
                 	if ([line hasPrefix:@"Version: "]) {
-                	    installedVersionString = [NSString stringWithFormat:@"tweakcompatible-zebra-%@", [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""]];
+                	    installedVersionString = [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""];
                 	}
             	}
         	}
@@ -660,11 +660,11 @@ NSMutableDictionary *all_packages;
 	if ([dpkgStatus containsString:[infoDict objectForKey:@"packageID"]]){
 		isInstalled = TRUE;
 		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
-        	if ([dpkgPackageStatus containsString:[infoDict objectForKey:@"packageID"]]) {
+        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@"packageID"]]) {
             	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
             	for (NSString *line in statusLines) {
                 	if ([line hasPrefix:@"Version: "]) {
-                	    installedVersionString = [NSString stringWithFormat:@"tweakcompatible-zebra-%@", [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""]];
+                	    installedVersionString = [line stringByReplacingOccurrencesOfString:@"Version: " withString:@""];
                 	}
             	}
         	}
