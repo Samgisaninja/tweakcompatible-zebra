@@ -16,13 +16,12 @@ NSMutableDictionary *all_packages;
 - (BOOL)isPaid;
 @end
 
-@interface ZBPackageDepictionViewController : UIViewController {
+@interface ZBPackageDepictionViewController : UITableViewController {
 	NSMutableDictionary *infos;
 }
 @property ZBPackage *package;
 @property (strong, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UILabel *packageName;
-- (NSArray *)packageInfoOrder;
 @end
 
 @interface ZBPackageInfoView : UIView {
@@ -58,9 +57,9 @@ NSMutableDictionary *all_packages;
 #endif
 
 @class ZBPackageDepictionViewController; @class ZBTabBarController; 
-static void (*_logos_orig$_ungrouped$ZBTabBarController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBTabBarController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST, SEL); static NSArray * (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static NSArray * _logos_method$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static UITableViewCell * (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static UITableViewCell * _logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static void (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$setPackage)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$setPackage(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnViewReports(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAddReport(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); 
+static void (*_logos_orig$_ungrouped$ZBTabBarController$viewDidLoad)(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBTabBarController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST, SEL); static NSArray * (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static NSArray * _logos_method$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static UITableViewCell * (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static UITableViewCell * _logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *, NSIndexPath *); static NSInteger (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$numberOfSectionsInTableView$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *); static NSInteger _logos_method$_ungrouped$ZBPackageDepictionViewController$numberOfSectionsInTableView$(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *); static NSInteger (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$numberOfRowsInSection$)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *, NSInteger); static NSInteger _logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$numberOfRowsInSection$(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL, UITableView *, NSInteger); static void (*_logos_orig$_ungrouped$ZBPackageDepictionViewController$setPackage)(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$setPackage(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnViewReports(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAddReport(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST, SEL); 
 
-#line 38 "Tweak.xm"
+#line 37 "Tweak.xm"
 
 
 static void _logos_method$_ungrouped$ZBTabBarController$viewDidLoad(_LOGOS_SELF_TYPE_NORMAL ZBTabBarController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd){
@@ -105,16 +104,21 @@ static NSArray * _logos_method$_ungrouped$ZBPackageDepictionViewController$packa
 }
 
 static UITableViewCell * _logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, UITableView * arg1, NSIndexPath * arg2) {
-    if ([arg2 row] == [[self packageInfoOrder] indexOfObject:@"TweakCompatible"]) {
-        UITableViewCell *cell = _logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$(self, _cmd, arg1, arg2);
-        NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
-        NSString *packageID = [infoDict objectForKey:@"PackageID"];
+	if ([arg2 section] == [self numberOfSectionsInTableView:self.tableView] - 1) {
+        UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+		NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
+        NSString *packageID = [infoDict objectForKey:@(0)];
+		NSString *versionString = [infoDict objectForKey:@(2)];
+		if ([versionString containsString:@"(Installed Version"]){
+			NSArray *versionArray = [versionString componentsSeparatedByString:@"(Installed Version"];
+			versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
+		}
         if ([[all_packages allKeys] containsObject:packageID] ) {
             NSDictionary *compatibilityInfo = [NSJSONSerialization JSONObjectWithData:[all_packages objectForKey:packageID] options:0 error:NULL];
             NSArray *allVersions = [compatibilityInfo objectForKey:@"versions"];
 			NSDictionary *outcomeDict;
             for (NSDictionary *versionInfo in allVersions){
-                if ([[versionInfo objectForKey:@"tweakVersion"] isEqualToString:[compatibilityInfo objectForKey:@"latest"]]) {
+                if ([[versionInfo objectForKey:@"tweakVersion"] isEqualToString:versionString]) {
                     if (sizeof(void*) == 4) {
                         outcomeDict = [NSDictionary dictionaryWithDictionary:[[versionInfo objectForKey:@"outcome"] objectForKey:@"arch32"]];
                     } else  {
@@ -204,12 +208,25 @@ static UITableViewCell * _logos_method$_ungrouped$ZBPackageDepictionViewControll
 			[buttonsStackView setBackgroundColor:[UIColor yellowColor]];
 	    	[buttonsStackView addArrangedSubview:viewReportsButton];
 			[buttonsStackView addArrangedSubview:addReportButton];
-	
+
 			[cell setAccessoryView:buttonsStackView];
 			return cell;
         }
     } else {
 		return _logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$(self, _cmd, arg1, arg2);
+	}
+}
+
+static NSInteger _logos_method$_ungrouped$ZBPackageDepictionViewController$numberOfSectionsInTableView$(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, UITableView * tableView) {
+	NSInteger newNumber = _logos_orig$_ungrouped$ZBPackageDepictionViewController$numberOfSectionsInTableView$(self, _cmd, tableView) + 1;
+    return newNumber;
+}
+
+static NSInteger _logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$numberOfRowsInSection$(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd, UITableView * tableView, NSInteger section) {
+	if (section == [self numberOfSectionsInTableView:self.tableView] - 1){
+		return 1;
+	} else {
+		return _logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$numberOfRowsInSection$(self, _cmd, tableView, section);
 	}
 }
 
@@ -224,8 +241,8 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$setPackage
 
 static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnViewReports(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd){
 	NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
-    NSString *packageID = [infoDict objectForKey:@"PackageID"];
-	NSString *versionString = [infoDict objectForKey:@"Version"];
+    NSString *packageID = [infoDict objectForKey:@(0)];
+	NSString *versionString = [infoDict objectForKey:@(2)];
 	NSString *summary = [[NSString alloc] init];
 	if ([versionString containsString:@"(Installed Version"]){
 		NSArray *versionArray = [versionString componentsSeparatedByString:@"(Installed Version"];
@@ -245,17 +262,17 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnVi
             }
         }
 		if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Working"] || [[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Likely working"] || [[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Not working"]){
-            summary = [NSString stringWithFormat:@"%@ version %@ is marked as %@ on iOS %@\n\n(%@ reports, %@ working and %@ non-working)", [infoDict objectForKey:@"PackageID"], versionString, [outcomeDict objectForKey:@"calculatedStatus"], [[UIDevice currentDevice] systemVersion], [outcomeDict objectForKey:@"total"], [outcomeDict objectForKey:@"good"], [outcomeDict objectForKey:@"bad"]];
+            summary = [NSString stringWithFormat:@"%@ version %@ is marked as %@ on iOS %@\n\n(%@ reports, %@ working and %@ non-working)", [infoDict objectForKey:@(0)], versionString, [outcomeDict objectForKey:@"calculatedStatus"], [[UIDevice currentDevice] systemVersion], [outcomeDict objectForKey:@"total"], [outcomeDict objectForKey:@"good"], [outcomeDict objectForKey:@"bad"]];
         } else {
-			summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@"PackageID"], versionString, [[UIDevice currentDevice] systemVersion]];
+			summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@(0)], versionString, [[UIDevice currentDevice] systemVersion]];
 		}
     } else {
-		summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@"PackageID"], versionString, [[UIDevice currentDevice] systemVersion]];
+		summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@(0)], versionString, [[UIDevice currentDevice] systemVersion]];
     }
 	UIAlertController *compatibilityAlert = [UIAlertController alertControllerWithTitle:@"Compatibility Report" message:summary preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
     UIAlertAction *viewAllReportsAction = [UIAlertAction actionWithTitle:@"View all reports" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [infoDict objectForKey:@"PackageID"], versionString]];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [infoDict objectForKey:@(0)], versionString]];
 		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
 		[self presentViewController:safariVC animated:TRUE completion:nil];
     }];
@@ -267,13 +284,13 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnVi
 
 static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAddReport(_LOGOS_SELF_TYPE_NORMAL ZBPackageDepictionViewController* _LOGOS_SELF_CONST __unused self, SEL __unused _cmd){
 	NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
-    NSString *packageID = [infoDict objectForKey:@"PackageID"];
+    NSString *packageID = [infoDict objectForKey:@(0)];
 	NSString *packageStatusExplanation = [[NSString alloc] init];
 	NSString *archDescription = [[NSString alloc] init];
 	NSDictionary *outcomeDict;
 	BOOL packageExists;
 	BOOL versionExists;
-	NSString *versionString = [infoDict objectForKey:@"Version"];
+	NSString *versionString = [infoDict objectForKey:@(2)];
 	if ([versionString containsString:@" (Installed Version: "]){
 		NSArray *versionArray = [versionString componentsSeparatedByString:@" (Installed Version: "];
 		versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -327,10 +344,10 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAd
     }
 	BOOL isInstalled;
 	NSString *installedVersionString = [[NSString alloc] init];
-	if ([dpkgStatus containsString:[infoDict objectForKey:@"PackageID"]]){
+	if ([dpkgStatus containsString:[infoDict objectForKey:@(0)]]){
 		isInstalled = TRUE;
 		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
-        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@"PackageID"]]) {
+        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@(0)]]) {
             	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
             	for (NSString *line in statusLines) {
                 	if ([line hasPrefix:@"Version: "]) {
@@ -351,8 +368,8 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAd
 		[userInfo setObject:@"Unknown" forKey:@"packageStatus"];
 	}
 	[userInfo setObject:packageStatusExplanation forKey:@"packageStatusExplaination"];
-	[userInfo setObject:[infoDict objectForKey:@"PackageID"] forKey:@"packageId"];
-	[userInfo setObject:[infoDict objectForKey:@"PackageID"] forKey:@"id"];
+	[userInfo setObject:[infoDict objectForKey:@(0)] forKey:@"packageId"];
+	[userInfo setObject:[infoDict objectForKey:@(0)] forKey:@"id"];
 	[userInfo setObject:[[self packageName] text] forKey:@"name"];
 	[userInfo setObject:[[self packageName] text] forKey:@"packageName"];
 	[userInfo setObject:versionString forKey:@"latest"];
@@ -369,13 +386,13 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAd
 		isArmv7 = FALSE;
 	}
 	[userInfo setObject:@(isArmv7) forKey:@"arch32"];
-	[userInfo setObject:[infoDict objectForKey:@"Repo"] forKey:@"repository"];
-	[userInfo setObject:[infoDict objectForKey:@"Author"] forKey:@"author"];
-	[userInfo setObject:[NSString stringWithFormat:@"http://cydia.saurik.com/package/%@/", [infoDict objectForKey:@"PackageID"]] forKey:@"url"];
+	[userInfo setObject:[infoDict objectForKey:@(4)] forKey:@"repository"];
+	[userInfo setObject:[infoDict objectForKey:@(1)] forKey:@"author"];
+	[userInfo setObject:[NSString stringWithFormat:@"http://cydia.saurik.com/package/%@/", [infoDict objectForKey:@(0)]] forKey:@"url"];
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo options:kNilOptions error:nil];
 	NSString *userInfoBase64 = [jsonData base64EncodedStringWithOptions:0];
-	NSString *workingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/working/%@", [infoDict objectForKey:@"PackageID"], userInfoBase64];
-	NSString *notWorkingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/notworking/%@", [infoDict objectForKey:@"PackageID"], userInfoBase64];
+	NSString *workingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/working/%@", [infoDict objectForKey:@(0)], userInfoBase64];
+	NSString *notWorkingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/notworking/%@", [infoDict objectForKey:@(0)], userInfoBase64];
 	UIAlertController *markPackageAlert;
 	NSString *message = [[NSString alloc] init];
 	if (isInstalled) {
@@ -410,5 +427,5 @@ static void _logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAd
 
 
 static __attribute__((constructor)) void _logosLocalInit() {
-{Class _logos_class$_ungrouped$ZBTabBarController = objc_getClass("ZBTabBarController"); MSHookMessageEx(_logos_class$_ungrouped$ZBTabBarController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$ZBTabBarController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$ZBTabBarController$viewDidLoad);Class _logos_class$_ungrouped$ZBPackageDepictionViewController = objc_getClass("ZBPackageDepictionViewController"); MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(packageInfoOrder), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(tableView:cellForRowAtIndexPath:), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(setPackage), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$setPackage, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$setPackage);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(tappedOnViewReports), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnViewReports, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(tappedOnAddReport), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAddReport, _typeEncoding); }} }
-#line 386 "Tweak.xm"
+{Class _logos_class$_ungrouped$ZBTabBarController = objc_getClass("ZBTabBarController"); MSHookMessageEx(_logos_class$_ungrouped$ZBTabBarController, @selector(viewDidLoad), (IMP)&_logos_method$_ungrouped$ZBTabBarController$viewDidLoad, (IMP*)&_logos_orig$_ungrouped$ZBTabBarController$viewDidLoad);Class _logos_class$_ungrouped$ZBPackageDepictionViewController = objc_getClass("ZBPackageDepictionViewController"); MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(packageInfoOrder), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$packageInfoOrder);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(tableView:cellForRowAtIndexPath:), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$cellForRowAtIndexPath$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(numberOfSectionsInTableView:), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$numberOfSectionsInTableView$, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$numberOfSectionsInTableView$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(tableView:numberOfRowsInSection:), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$tableView$numberOfRowsInSection$, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$tableView$numberOfRowsInSection$);MSHookMessageEx(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(setPackage), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$setPackage, (IMP*)&_logos_orig$_ungrouped$ZBPackageDepictionViewController$setPackage);{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(tappedOnViewReports), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnViewReports, _typeEncoding); }{ char _typeEncoding[1024]; unsigned int i = 0; _typeEncoding[i] = 'v'; i += 1; _typeEncoding[i] = '@'; i += 1; _typeEncoding[i] = ':'; i += 1; _typeEncoding[i] = '\0'; class_addMethod(_logos_class$_ungrouped$ZBPackageDepictionViewController, @selector(tappedOnAddReport), (IMP)&_logos_method$_ungrouped$ZBPackageDepictionViewController$tappedOnAddReport, _typeEncoding); }} }
+#line 403 "Tweak.xm"

@@ -82,12 +82,17 @@ NSMutableDictionary *all_packages;
         UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
 		NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
         NSString *packageID = [infoDict objectForKey:@(0)];
+		NSString *versionString = [infoDict objectForKey:@(2)];
+		if ([versionString containsString:@"(Installed Version"]){
+			NSArray *versionArray = [versionString componentsSeparatedByString:@"(Installed Version"];
+			versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
+		}
         if ([[all_packages allKeys] containsObject:packageID] ) {
             NSDictionary *compatibilityInfo = [NSJSONSerialization JSONObjectWithData:[all_packages objectForKey:packageID] options:0 error:NULL];
             NSArray *allVersions = [compatibilityInfo objectForKey:@"versions"];
 			NSDictionary *outcomeDict;
             for (NSDictionary *versionInfo in allVersions){
-                if ([[versionInfo objectForKey:@"tweakVersion"] isEqualToString:[compatibilityInfo objectForKey:@"latest"]]) {
+                if ([[versionInfo objectForKey:@"tweakVersion"] isEqualToString:versionString]) {
                     if (sizeof(void*) == 4) {
                         outcomeDict = [NSDictionary dictionaryWithDictionary:[[versionInfo objectForKey:@"outcome"] objectForKey:@"arch32"]];
                     } else  {
