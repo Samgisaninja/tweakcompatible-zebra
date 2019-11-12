@@ -15,13 +15,12 @@ NSMutableDictionary *all_packages;
 - (BOOL)isPaid;
 @end
 
-@interface ZBPackageDepictionViewController : UIViewController {
+@interface ZBPackageDepictionViewController : UITableViewController {
 	NSMutableDictionary *infos;
 }
 @property ZBPackage *package;
 @property (strong, nonatomic) UITableView *tableView;
 @property (weak, nonatomic) UILabel *packageName;
-- (NSArray *)packageInfoOrder;
 @end
 
 @interface ZBPackageInfoView : UIView {
@@ -79,10 +78,10 @@ NSMutableDictionary *all_packages;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
-    if ([arg2 row] == [[self packageInfoOrder] indexOfObject:@"TweakCompatible"]) {
-        UITableViewCell *cell = %orig;
-        NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
-        NSString *packageID = [infoDict objectForKey:@"PackageID"];
+	if ([arg2 section] == [self numberOfSectionsInTableView:self.tableView] - 1) {
+        UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
+		NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
+        NSString *packageID = [infoDict objectForKey:@(0)];
         if ([[all_packages allKeys] containsObject:packageID] ) {
             NSDictionary *compatibilityInfo = [NSJSONSerialization JSONObjectWithData:[all_packages objectForKey:packageID] options:0 error:NULL];
             NSArray *allVersions = [compatibilityInfo objectForKey:@"versions"];
@@ -178,11 +177,24 @@ NSMutableDictionary *all_packages;
 			[buttonsStackView setBackgroundColor:[UIColor yellowColor]];
 	    	[buttonsStackView addArrangedSubview:viewReportsButton];
 			[buttonsStackView addArrangedSubview:addReportButton];
-	
+
 			[cell setAccessoryView:buttonsStackView];
 			return cell;
         }
     } else {
+		return %orig;
+	}
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	NSInteger newNumber = %orig + 1;
+    return newNumber;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	if (section == [self numberOfSectionsInTableView:self.tableView] - 1){
+		return 1;
+	} else {
 		return %orig;
 	}
 }
@@ -198,8 +210,8 @@ NSMutableDictionary *all_packages;
 %new
 -(void)tappedOnViewReports{
 	NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
-    NSString *packageID = [infoDict objectForKey:@"PackageID"];
-	NSString *versionString = [infoDict objectForKey:@"Version"];
+    NSString *packageID = [infoDict objectForKey:@(0)];
+	NSString *versionString = [infoDict objectForKey:@(2)];
 	NSString *summary = [[NSString alloc] init];
 	if ([versionString containsString:@"(Installed Version"]){
 		NSArray *versionArray = [versionString componentsSeparatedByString:@"(Installed Version"];
@@ -219,17 +231,17 @@ NSMutableDictionary *all_packages;
             }
         }
 		if ([[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Working"] || [[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Likely working"] || [[outcomeDict objectForKey:@"calculatedStatus"] isEqualToString:@"Not working"]){
-            summary = [NSString stringWithFormat:@"%@ version %@ is marked as %@ on iOS %@\n\n(%@ reports, %@ working and %@ non-working)", [infoDict objectForKey:@"PackageID"], versionString, [outcomeDict objectForKey:@"calculatedStatus"], [[UIDevice currentDevice] systemVersion], [outcomeDict objectForKey:@"total"], [outcomeDict objectForKey:@"good"], [outcomeDict objectForKey:@"bad"]];
+            summary = [NSString stringWithFormat:@"%@ version %@ is marked as %@ on iOS %@\n\n(%@ reports, %@ working and %@ non-working)", [infoDict objectForKey:@(0)], versionString, [outcomeDict objectForKey:@"calculatedStatus"], [[UIDevice currentDevice] systemVersion], [outcomeDict objectForKey:@"total"], [outcomeDict objectForKey:@"good"], [outcomeDict objectForKey:@"bad"]];
         } else {
-			summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@"PackageID"], versionString, [[UIDevice currentDevice] systemVersion]];
+			summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@(0)], versionString, [[UIDevice currentDevice] systemVersion]];
 		}
     } else {
-		summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@"PackageID"], versionString, [[UIDevice currentDevice] systemVersion]];
+		summary = [NSString stringWithFormat:@"%@ version %@ has unknown compatibility with iOS %@", [infoDict objectForKey:@(0)], versionString, [[UIDevice currentDevice] systemVersion]];
     }
 	UIAlertController *compatibilityAlert = [UIAlertController alertControllerWithTitle:@"Compatibility Report" message:summary preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *dismissAction = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:nil];
     UIAlertAction *viewAllReportsAction = [UIAlertAction actionWithTitle:@"View all reports" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [infoDict objectForKey:@"PackageID"], versionString]];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/package.html#!/%@/details/%@", [infoDict objectForKey:@(0)], versionString]];
 		SFSafariViewController *safariVC = [[SFSafariViewController alloc] initWithURL:url];
 		[self presentViewController:safariVC animated:TRUE completion:nil];
     }];
@@ -241,13 +253,13 @@ NSMutableDictionary *all_packages;
 %new
 -(void)tappedOnAddReport{
 	NSMutableDictionary *infoDict = MSHookIvar<NSMutableDictionary *>(self, "infos");
-    NSString *packageID = [infoDict objectForKey:@"PackageID"];
+    NSString *packageID = [infoDict objectForKey:@(0)];
 	NSString *packageStatusExplanation = [[NSString alloc] init];
 	NSString *archDescription = [[NSString alloc] init];
 	NSDictionary *outcomeDict;
 	BOOL packageExists;
 	BOOL versionExists;
-	NSString *versionString = [infoDict objectForKey:@"Version"];
+	NSString *versionString = [infoDict objectForKey:@(2)];
 	if ([versionString containsString:@" (Installed Version: "]){
 		NSArray *versionArray = [versionString componentsSeparatedByString:@" (Installed Version: "];
 		versionString = [[versionArray objectAtIndex:0] stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -301,10 +313,10 @@ NSMutableDictionary *all_packages;
     }
 	BOOL isInstalled;
 	NSString *installedVersionString = [[NSString alloc] init];
-	if ([dpkgStatus containsString:[infoDict objectForKey:@"PackageID"]]){
+	if ([dpkgStatus containsString:[infoDict objectForKey:@(0)]]){
 		isInstalled = TRUE;
 		for (NSString *dpkgPackageStatus in dpkgStatusArray) {
-        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@"PackageID"]]) {
+        	if ([dpkgPackageStatus hasPrefix:[infoDict objectForKey:@(0)]]) {
             	NSArray *statusLines = [dpkgPackageStatus componentsSeparatedByString:[NSString stringWithFormat:@"\n"]];
             	for (NSString *line in statusLines) {
                 	if ([line hasPrefix:@"Version: "]) {
@@ -325,8 +337,8 @@ NSMutableDictionary *all_packages;
 		[userInfo setObject:@"Unknown" forKey:@"packageStatus"];
 	}
 	[userInfo setObject:packageStatusExplanation forKey:@"packageStatusExplaination"];
-	[userInfo setObject:[infoDict objectForKey:@"PackageID"] forKey:@"packageId"];
-	[userInfo setObject:[infoDict objectForKey:@"PackageID"] forKey:@"id"];
+	[userInfo setObject:[infoDict objectForKey:@(0)] forKey:@"packageId"];
+	[userInfo setObject:[infoDict objectForKey:@(0)] forKey:@"id"];
 	[userInfo setObject:[[self packageName] text] forKey:@"name"];
 	[userInfo setObject:[[self packageName] text] forKey:@"packageName"];
 	[userInfo setObject:versionString forKey:@"latest"];
@@ -343,13 +355,13 @@ NSMutableDictionary *all_packages;
 		isArmv7 = FALSE;
 	}
 	[userInfo setObject:@(isArmv7) forKey:@"arch32"];
-	[userInfo setObject:[infoDict objectForKey:@"Repo"] forKey:@"repository"];
-	[userInfo setObject:[infoDict objectForKey:@"Author"] forKey:@"author"];
-	[userInfo setObject:[NSString stringWithFormat:@"http://cydia.saurik.com/package/%@/", [infoDict objectForKey:@"PackageID"]] forKey:@"url"];
+	[userInfo setObject:[infoDict objectForKey:@(4)] forKey:@"repository"];
+	[userInfo setObject:[infoDict objectForKey:@(1)] forKey:@"author"];
+	[userInfo setObject:[NSString stringWithFormat:@"http://cydia.saurik.com/package/%@/", [infoDict objectForKey:@(0)]] forKey:@"url"];
 	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:userInfo options:kNilOptions error:nil];
 	NSString *userInfoBase64 = [jsonData base64EncodedStringWithOptions:0];
-	NSString *workingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/working/%@", [infoDict objectForKey:@"PackageID"], userInfoBase64];
-	NSString *notWorkingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/notworking/%@", [infoDict objectForKey:@"PackageID"], userInfoBase64];
+	NSString *workingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/working/%@", [infoDict objectForKey:@(0)], userInfoBase64];
+	NSString *notWorkingURLString = [NSString stringWithFormat:@"https://jlippold.github.io/tweakCompatible/submit.html#!/%@/notworking/%@", [infoDict objectForKey:@(0)], userInfoBase64];
 	UIAlertController *markPackageAlert;
 	NSString *message = [[NSString alloc] init];
 	if (isInstalled) {
