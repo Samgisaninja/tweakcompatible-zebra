@@ -69,14 +69,6 @@ NSMutableDictionary *all_packages;
 
 %hook ZBPackageDepictionViewController
 
-- (NSArray *)packageInfoOrder {
-	NSArray *origPkgInfoOrder = %orig;
-	NSMutableArray *pkgInfoOrder = [NSMutableArray arrayWithArray:origPkgInfoOrder];
-	int i = (int)[pkgInfoOrder count];
-    [pkgInfoOrder insertObject:@"TweakCompatible" atIndex:i];
-	return pkgInfoOrder;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)arg1 cellForRowAtIndexPath:(NSIndexPath *)arg2 {
 	if ([arg2 section] == [self numberOfSectionsInTableView:self.tableView] - 1) {
         UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
